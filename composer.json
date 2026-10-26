@@ -84,25 +84,16 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "ousseynoufbseck:db:create": [
+            "@php bin/console doctrine:database:drop --if-exists --force",
+            "@php bin/console doctrine:database:create"
+        ],
+        "ousseynoufbseck:cache:clear": "@php bin/console cache:clear",
+        "ousseynoufbseck:make:entity": "@php bin/console make:entity",
+        "ousseynoufbseck:migration": [
+            "@php bin/console make:migration",
+            "@php bin/console doctrine:migrations:migrate --no-interaction"
         ]
-    },
-    "conflict": {
-        "symfony/symfony": "*"
-    },
-    "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "7.4.*",
-            "docker": false
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^13.4",
-        "symfony/browser-kit": "7.4.*",
-        "symfony/css-selector": "7.4.*",
-        "symfony/debug-bundle": "7.4.*",
-        "symfony/maker-bundle": "^1.68",
-        "symfony/stopwatch": "7.4.*",
-        "symfony/web-profiler-bundle": "7.4.*"
     }
 }
