@@ -20,6 +20,15 @@ class Membre extends Users
     #[ORM\Column(length: 255)]
     private ?string $fonction = null;
 
+    #[ORM\ManyToOne(inversedBy: 'role')]
+    private ?ModeCotisation $modeCotisation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'groupement')]
+    private ?Role $relation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'membres')]
+    private ?Groupement $groupement = null;
+
 
     public function getNom(): ?string
     {
@@ -65,6 +74,42 @@ class Membre extends Users
     public function setFonction(string $fonction): static
     {
         $this->fonction = $fonction;
+
+        return $this;
+    }
+
+    public function getModeCotisation(): ?ModeCotisation
+    {
+        return $this->modeCotisation;
+    }
+
+    public function setModeCotisation(?ModeCotisation $modeCotisation): static
+    {
+        $this->modeCotisation = $modeCotisation;
+
+        return $this;
+    }
+
+    public function getRelation(): ?Role
+    {
+        return $this->relation;
+    }
+
+    public function setRelation(?Role $relation): static
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
+    public function getGroupement(): ?Groupement
+    {
+        return $this->groupement;
+    }
+
+    public function setGroupement(?Groupement $groupement): static
+    {
+        $this->groupement = $groupement;
 
         return $this;
     }
