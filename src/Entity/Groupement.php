@@ -169,14 +169,15 @@ class Groupement
     }
 
     public function removeExercice(Exercice $exercice): static
-    {
-        if ($this->exercices->removeElement($exercice)) {
-            // set the owning side to null (unless already changed)
-            if ($exercice->getGroupement() === $this) {
-                $exercice->setGroupement(null);
-            }
-        }
-
-        return $this;
+{
+    if ($exercice->getGroupement() === $this) {
+        throw new \LogicException(
+            'Impossible de retirer cet exercice sans lui attribuer un autre groupement.'
+        );
     }
+
+    $this->exercices->removeElement($exercice);
+
+    return $this;
+}
 }
