@@ -4,6 +4,14 @@ namespace App\Enum;
 
 enum StatutExercice: string
 {
-    case EN_COURS = 'EN_COURS';
-    case CLOTURE = 'CLOTURE';
+    case ENCOURS = 'en_cours';
+    case CLOTURE = 'cloture';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::ENCOURS => "En cours",
+            self::CLOTURE => "Clôturé",
+        };
+    }
 }

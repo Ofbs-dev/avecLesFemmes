@@ -1,29 +1,33 @@
 <?php
+
 namespace App\Entity;
 
 use App\Enum\StatutExercice;
 use App\Repository\ExerciceRepository;
-use Doctrine\ORM\Mapping as ORM;    
+use App\Trait\DateTimeTrait;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
 class Exercice
 {
+    use DateTimeTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $dateDebut = null;
+    private ?\DateTime $debutAt = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateFin = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $finAt = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateLimitePrets = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $limitePretsAt = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateRetribution = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $retributionAt = null;
 
     #[ORM\Column(type: 'string', enumType: StatutExercice::class)]
     private ?StatutExercice $statut = null;
@@ -32,58 +36,60 @@ class Exercice
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupement $groupement = null;
 
+    public function __construct()
+    {
+        $this->initDate();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateDebut(): ?\DateTimeImmutable
+    public function getDebutAt(): ?\DateTime
     {
-        return $this->dateDebut;
+        return $this->debutAt;
     }
 
-    public function setDateDebut(\DateTimeImmutable $dateDebut): static
+    public function setDebutAt(\DateTime $debutAt): static
     {
-        $this->dateDebut = $dateDebut;
-
+        $this->debutAt = $debutAt;
         return $this;
     }
 
-    public function getDateFin(): ?\DateTimeImmutable
+    public function getFinAt(): ?\DateTime
     {
-        return $this->dateFin;
+        return $this->finAt;
     }
 
-    public function setDateFin(\DateTimeImmutable $dateFin): static
+    public function setFinAt(?\DateTime $finAt): static
     {
-        $this->dateFin = $dateFin;
-
+        $this->finAt = $finAt;
         return $this;
     }
 
-    public function getDateLimitePrets(): ?\DateTimeImmutable
+    public function getLimitePretsAt(): ?\DateTime
     {
-        return $this->dateLimitePrets;
+        return $this->limitePretsAt;
     }
 
-    public function setDateLimitePrets(\DateTimeImmutable $dateLimitePrets): static
+    public function setLimitePretsAt(?\DateTime $limitePretsAt): static
     {
-        $this->dateLimitePrets = $dateLimitePrets;
-
+        $this->limitePretsAt = $limitePretsAt;
         return $this;
     }
 
-    public function getDateRetribution(): ?\DateTimeImmutable
+    public function getRetributionAt(): ?\DateTime
     {
-        return $this->dateRetribution;
+        return $this->retributionAt;
     }
 
-    public function setDateRetribution(\DateTimeImmutable $dateRetribution): static
+    public function setRetributionAt(?\DateTime $retributionAt): static
     {
-        $this->dateRetribution = $dateRetribution;
-
+        $this->retributionAt = $retributionAt;
         return $this;
     }
+
     public function getStatut(): ?StatutExercice
     {
         return $this->statut;
@@ -92,7 +98,6 @@ class Exercice
     public function setStatut(StatutExercice $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 
@@ -104,7 +109,6 @@ class Exercice
     public function setGroupement(Groupement $groupement): static
     {
         $this->groupement = $groupement;
-
         return $this;
     }
 }
