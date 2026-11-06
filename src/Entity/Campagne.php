@@ -3,76 +3,53 @@
 namespace App\Entity;
 
 use App\Repository\CampagneRepository;
+use App\Trait\DateTimeTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CampagneRepository::class)]
 class Campagne
 {
+    use DateTimeTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'campagnes')]
-    private ?ModeCotisation $modeCotisation = null;
-
-    #[ORM\ManyToOne(inversedBy: 'campagnes')]
-    private ?Type $type = null;
-
-    #[ORM\ManyToOne(inversedBy: 'campagnes')]
-    private ?Groupement $groupement = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateDebut = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $dateDebutAt = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateFin = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $dateFinAt = null;
 
     #[ORM\Column]
     private ?int $montant = null;
 
+    #[ORM\ManyToOne(inversedBy: 'campagnes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeCampagne $typeCampagne = null;
+
+    /**
+     * @var Collection<int, ModeCotisation>
+     */
+    #[ORM\OneToMany(targetEntity: ModeCotisation::class, mappedBy: 'campagne')]
+    private Collection $modeCotisations;
+
+    public function __construct()
+    {
+        $this->modeCotisations = new ArrayCollection();
+        $this->initDate();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getModeCotisation(): ?ModeCotisation
-    {
-        return $this->modeCotisation;
-    }
-
-    public function setModeCotisation(?ModeCotisation $modeCotisation): static
-    {
-        $this->modeCotisation = $modeCotisation;
-
-        return $this;
-    }
-
-    public function getType(): ?Type
-    {
-        return $this->type;
-    }
-
-    public function setType(?Type $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getGroupement(): ?Groupement
-    {
-        return $this->groupement;
-    }
-
-    public function setGroupement(?Groupement $groupement): static
-    {
-        $this->groupement = $groupement;
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -83,31 +60,28 @@ class Campagne
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebutAt(): ?\DateTime
     {
-        return $this->dateDebut;
+        return $this->dateDebutAt;
     }
 
-    public function setDateDebut(\DateTime $dateDebut): static
+    public function setDateDebutAt(\DateTime $dateDebutAt): static
     {
-        $this->dateDebut = $dateDebut;
-
+        $this->dateDebutAt = $dateDebutAt;
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFinAt(): ?\DateTime
     {
-        return $this->dateFin;
+        return $this->dateFinAt;
     }
 
-    public function setDateFin(\DateTime $dateFin): static
+    public function setDateFinAt(?\DateTime $dateFinAt): static
     {
-        $this->dateFin = $dateFin;
-
+        $this->dateFinAt = $dateFinAt;
         return $this;
     }
 
@@ -119,6 +93,45 @@ class Campagne
     public function setMontant(int $montant): static
     {
         $this->montant = $montant;
+        return $this;
+    }
+
+    public function getTypeCampagne(): ?TypeCampagne
+    {
+        return $this->typeCampagne;
+    }
+
+    public function setTypeCampagne(?TypeCampagne $typeCampagne): static
+    {
+        $this->typeCampagne = $typeCampagne;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ModeCotisation>
+     */
+    public function getModeCotisations(): Collection
+    {
+        return $this->modeCotisations;
+    }
+
+    public function addModeCotisation(ModeCotisation $modeCotisation): static
+    {
+        if (!$this->modeCotisations->contains($modeCotisation)) {
+            $this->modeCotisations->add($modeCotisation);
+            $modeCotisation->setCampagne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModeCotisation(ModeCotisation $modeCotisation): static
+    {
+        if ($this->modeCotisations->removeElement($modeCotisation)) {
+            if ($modeCotisation->getCampagne() === $this) {
+                $modeCotisation->setCampagne(null);
+            }
+        }
 
         return $this;
     }

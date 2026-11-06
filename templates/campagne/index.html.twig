@@ -1,0 +1,72 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des campagnes{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Liste des campagnes</h1>
+        <a href="{{ path('app_campagne_ajouter') }}" class="btn btn-primary">
+            + Ajouter une campagne
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% if campagnes is empty %}
+        <div class="alert alert-info">
+            Aucune campagne enregistrée.
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campagne in campagnes %}
+                        <tr>
+                            <td>{{ campagne.id }}</td>
+                            <td>{{ campagne.nom }}</td>
+                            <td>{{ campagne.typeCampagne.nom }}</td>
+                            <td>{{ campagne.dateDebutAt|date('d/m/Y') }}</td>
+                            <td>
+                                {{ campagne.dateFinAt ? campagne.dateFinAt|date('d/m/Y') : '-' }}
+                            </td>
+                            <td>{{ campagne.montant|number_format(0, ',', ' ') }} FCFA</td>
+                            <td>
+                                <a href="{{ path('app_campagne_detail', {id: campagne.id}) }}"
+                                   class="btn btn-info btn-sm">Détails</a>
+
+                                <a href="{{ path('app_campagne_modifier', {id: campagne.id}) }}"
+                                   class="btn btn-warning btn-sm">Modifier</a>
+
+                                <form method="post"
+                                      action="{{ path('app_campagne_supprimer', {id: campagne.id}) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Confirmer la suppression ?');">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('supprimer_campagne_' ~ campagne.id) }}">
+                                    <button class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

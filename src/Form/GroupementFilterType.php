@@ -20,18 +20,29 @@ class GroupementFilterType extends AbstractType
                 'required' => false,
                 'label' => 'Téléphone',
                 'attr' => [
+                    'class' => 'form-control',
                     'placeholder' => 'Rechercher par téléphone',
+                ],
+                'label_attr' => [
+                    'class' => 'form-label',
                 ],
             ])
             ->add('adresse', SearchType::class, [
                 'required' => false,
-                'label' => 'Ville',
+                'label' => 'Adresse',
                 'attr' => [
-                    'placeholder' => 'Rechercher par ville',
+                    'class' => 'form-control',
+                    'placeholder' => 'Rechercher par adresse',
+                ],
+                'label_attr' => [
+                    'class' => 'form-label',
                 ],
             ])
             ->add('rechercher', SubmitType::class, [
                 'label' => 'Rechercher',
+                'attr' => [
+                    'class' => 'btn btn-primary w-100',
+                ],
             ]);
     }
 

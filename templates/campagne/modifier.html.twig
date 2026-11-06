@@ -1,0 +1,25 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une campagne{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Modifier la campagne : {{ campagne.nom }}</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+
+                <div class="mt-4">
+                    <button class="btn btn-warning">Enregistrer les modifications</button>
+                    <a href="{{ path('app_campagne') }}" class="btn btn-secondary">
+                        Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

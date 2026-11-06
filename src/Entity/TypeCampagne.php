@@ -2,26 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\TypeRepository;
+use App\Repository\TypeCampagneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TypeRepository::class)]
-class Type
+#[ORM\Entity(repositoryClass: TypeCampagneRepository::class)]
+class TypeCampagne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nomType = null;
+    #[ORM\Column(length: 100)]
+    private ?string $nom = null;
 
     /**
      * @var Collection<int, Campagne>
      */
-    #[ORM\OneToMany(targetEntity: Campagne::class, mappedBy: 'type')]
+    #[ORM\OneToMany(targetEntity: Campagne::class, mappedBy: 'typeCampagne')]
     private Collection $campagnes;
 
     public function __construct()
@@ -34,15 +34,14 @@ class Type
         return $this->id;
     }
 
-    public function getNomType(): ?string
+    public function getNom(): ?string
     {
-        return $this->nomType;
+        return $this->nom;
     }
 
-    public function setNomType(string $nomType): static
+    public function setNom(string $nom): static
     {
-        $this->nomType = $nomType;
-
+        $this->nom = $nom;
         return $this;
     }
 
@@ -58,7 +57,7 @@ class Type
     {
         if (!$this->campagnes->contains($campagne)) {
             $this->campagnes->add($campagne);
-            $campagne->setType($this);
+            $campagne->setTypeCampagne($this);
         }
 
         return $this;
@@ -67,9 +66,8 @@ class Type
     public function removeCampagne(Campagne $campagne): static
     {
         if ($this->campagnes->removeElement($campagne)) {
-            // set the owning side to null (unless already changed)
-            if ($campagne->getType() === $this) {
-                $campagne->setType(null);
+            if ($campagne->getTypeCampagne() === $this) {
+                $campagne->setTypeCampagne(null);
             }
         }
 
